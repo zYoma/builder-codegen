@@ -132,3 +132,4 @@ yarn-error.log*
 ./postgres-data
 ./.postgres-data
 .pytest_cache/
+result.py
