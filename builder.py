@@ -1,15 +1,8 @@
-from typing import Union
 import json
 
-from dataclasses import make_dataclass
+from dataclasses import make_dataclass, asdict
 from distutils.util import strtobool
-
-
-def get_json(filename: str = 'data.json') -> dict:
-    with open(filename, "r") as f:
-        data = json.load(f)
-
-    return data
+from typing import Union
 
 
 class Builder:
@@ -31,6 +24,7 @@ class Builder:
             float: lambda value: float(value) if value else None,
             str: lambda value: str(value) if value else None,
             dict: lambda value: dict(value) if value else None,
+            list: lambda value: list(value) if value else None,
         }
 
         return [
@@ -43,11 +37,4 @@ class Builder:
         created_class = make_dataclass('JsonObject', fields)
         obj = created_class(**self.json_data)
 
-        return obj
-
-
-if __name__ == '__main__':
-    json_data = get_json()  # Как-то полученный JSON
-    builder = Builder(json_data)
-    json_obj = builder.get_json_obj()
-    print(json_obj.__dict__)
+        return asdict(obj)
