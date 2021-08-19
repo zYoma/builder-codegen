@@ -68,107 +68,107 @@ def json_data():
 
 @pytest.fixture
 def json_result():
-    return {'receiptDate': '2021-08-17T11:36:06+03:00', 'appealDate': None, 'registrationDate': '2021-08-17', 'deadlineDate': None, 'authors': [], 'nomenclature': {}, 'questions': [], 'answers': [], 'files': [], 'pages': [], 'coveringLetters': [], 'appealParticipants': [], 'curators': [], 'resolutionCurators': [], 'employees': [], 'addresseeActingEmployees': [], 'appealObjects': [], 'authorOfLegals': [], 'toNumber': [], 'referringDocuments': [], 'options': {}, 'numberPages': '1+0+1', 'numberSignatures': 1, 'isAdministrativeUse': True, 'documentKind': 'INCOMING', 'medoDocumentKind': None, 'typeReceipt': {}, 'typeRepeat': {}, 'documentType': {}, 'number': 'АМ-4-10314/21 ДСП', 'subjects': [], 'coauthors': [], 'withOutMainFile': None, 'numberWasGenerated': True, 'autoIncremented': False, 'reservedNumber': None, 'reservedNomenclature': None}
+    return {'receipt_date': '2021-08-17T11:36:06+03:00', 'appeal_date': None, 'registration_date': '2021-08-17', 'deadline_date': None, 'authors': [], 'nomenclature': {}, 'questions': [], 'answers': [], 'files': [], 'pages': [], 'covering_letters': [], 'appeal_participants': [], 'curators': [], 'resolution_curators': [], 'employees': [], 'addressee_acting_employees': [], 'appeal_objects': [], 'author_of_legals': [], 'to_number': [], 'referring_documents': [], 'options': {}, 'number_pages': '1+0+1', 'number_signatures': 1, 'is_administrative_use': True, 'document_kind': 'INCOMING', 'medo_document_kind': None, 'type_receipt': {}, 'type_repeat': {}, 'document_type': {}, 'number': 'АМ-4-10314/21 ДСП', 'subjects': [], 'coauthors': [], 'with_out_main_file': None, 'number_was_generated': True, 'auto_incremented': False, 'reserved_number': None, 'reserved_nomenclature': None}
 
 
 @pytest.fixture
 def make_code_string_result():
     return '''@dataclass
 class TestFormData(BaseModel):
-    receiptDate: Optional[str] = None
-    appealDate: Optional[str] = None
-    registrationDate: Optional[str] = None
-    deadlineDate: Optional[str] = None
-    authors: Optional[list] = None
-    nomenclature: Optional[dict] = None
-    questions: Optional[list] = None
-    answers: Optional[list] = None
-    files: Optional[list] = None
-    pages: Optional[list] = None
-    coveringLetters: Optional[list] = None
-    appealParticipants: Optional[list] = None
-    curators: Optional[list] = None
-    resolutionCurators: Optional[list] = None
-    employees: Optional[list] = None
-    addresseeActingEmployees: Optional[list] = None
-    appealObjects: Optional[list] = None
-    authorOfLegals: Optional[list] = None
-    toNumber: Optional[list] = None
-    referringDocuments: Optional[list] = None
-    options: Optional[dict] = None
-    numberPages: Optional[str] = None
-    numberSignatures: Optional[int] = None
-    isAdministrativeUse: Optional[bool] = None
-    documentKind: Optional[str] = None
-    medoDocumentKind: Optional[str] = None
-    typeReceipt: Optional[dict] = None
-    typeRepeat: Optional[dict] = None
-    documentType: Optional[dict] = None
+    receipt_date: Optional[str] = None
+    appeal_date: Optional[str] = None
+    registration_date: Optional[str] = None
+    deadline_date: Optional[str] = None
+    authors: list = field(default_factory=lambda: [])
+    nomenclature: dict = field(default_factory=lambda: {})
+    questions: list = field(default_factory=lambda: [])
+    answers: list = field(default_factory=lambda: [])
+    files: list = field(default_factory=lambda: [])
+    pages: list = field(default_factory=lambda: [])
+    covering_letters: list = field(default_factory=lambda: [])
+    appeal_participants: list = field(default_factory=lambda: [])
+    curators: list = field(default_factory=lambda: [])
+    resolution_curators: list = field(default_factory=lambda: [])
+    employees: list = field(default_factory=lambda: [])
+    addressee_acting_employees: list = field(default_factory=lambda: [])
+    appeal_objects: list = field(default_factory=lambda: [])
+    author_of_legals: list = field(default_factory=lambda: [])
+    to_number: list = field(default_factory=lambda: [])
+    referring_documents: list = field(default_factory=lambda: [])
+    options: dict = field(default_factory=lambda: {})
+    number_pages: Optional[str] = None
+    number_signatures: Optional[int] = None
+    is_administrative_use: Optional[bool] = None
+    document_kind: Optional[str] = None
+    medo_document_kind: Optional[str] = None
+    type_receipt: dict = field(default_factory=lambda: {})
+    type_repeat: dict = field(default_factory=lambda: {})
+    document_type: dict = field(default_factory=lambda: {})
     number: Optional[str] = None
-    subjects: Optional[list] = None
-    coauthors: Optional[list] = None
-    withOutMainFile: Optional[str] = None
-    numberWasGenerated: Optional[bool] = None
-    autoIncremented: Optional[bool] = None
-    reservedNumber: Optional[str] = None
-    reservedNomenclature: Optional[str] = None
+    subjects: list = field(default_factory=lambda: [])
+    coauthors: list = field(default_factory=lambda: [])
+    with_out_main_file: Optional[str] = None
+    number_was_generated: Optional[bool] = None
+    auto_incremented: Optional[bool] = None
+    reserved_number: Optional[str] = None
+    reserved_nomenclature: Optional[str] = None
 
 
 class TestFormDataBuilde(BaseBuilder):
     def __init__(self):
         super().__init__()
-        self._receiptDate: Optional[str] = None
-        self._appealDate: Optional[str] = None
-        self._registrationDate: Optional[str] = None
-        self._deadlineDate: Optional[str] = None
-        self._authors: Optional[list] = None
-        self._nomenclature: Optional[dict] = None
-        self._questions: Optional[list] = None
-        self._answers: Optional[list] = None
-        self._files: Optional[list] = None
-        self._pages: Optional[list] = None
-        self._coveringLetters: Optional[list] = None
-        self._appealParticipants: Optional[list] = None
-        self._curators: Optional[list] = None
-        self._resolutionCurators: Optional[list] = None
-        self._employees: Optional[list] = None
-        self._addresseeActingEmployees: Optional[list] = None
-        self._appealObjects: Optional[list] = None
-        self._authorOfLegals: Optional[list] = None
-        self._toNumber: Optional[list] = None
-        self._referringDocuments: Optional[list] = None
-        self._options: Optional[dict] = None
-        self._numberPages: Optional[str] = None
-        self._numberSignatures: Optional[int] = None
-        self._isAdministrativeUse: Optional[bool] = None
-        self._documentKind: Optional[str] = None
-        self._medoDocumentKind: Optional[str] = None
-        self._typeReceipt: Optional[dict] = None
-        self._typeRepeat: Optional[dict] = None
-        self._documentType: Optional[dict] = None
+        self._receipt_date: Optional[str] = None
+        self._appeal_date: Optional[str] = None
+        self._registration_date: Optional[str] = None
+        self._deadline_date: Optional[str] = None
+        self._authors: Optional[list] = []
+        self._nomenclature: Optional[dict] = {}
+        self._questions: Optional[list] = []
+        self._answers: Optional[list] = []
+        self._files: Optional[list] = []
+        self._pages: Optional[list] = []
+        self._covering_letters: Optional[list] = []
+        self._appeal_participants: Optional[list] = []
+        self._curators: Optional[list] = []
+        self._resolution_curators: Optional[list] = []
+        self._employees: Optional[list] = []
+        self._addressee_acting_employees: Optional[list] = []
+        self._appeal_objects: Optional[list] = []
+        self._author_of_legals: Optional[list] = []
+        self._to_number: Optional[list] = []
+        self._referring_documents: Optional[list] = []
+        self._options: Optional[dict] = {}
+        self._number_pages: Optional[str] = None
+        self._number_signatures: Optional[int] = None
+        self._is_administrative_use: Optional[bool] = None
+        self._document_kind: Optional[str] = None
+        self._medo_document_kind: Optional[str] = None
+        self._type_receipt: Optional[dict] = {}
+        self._type_repeat: Optional[dict] = {}
+        self._document_type: Optional[dict] = {}
         self._number: Optional[str] = None
-        self._subjects: Optional[list] = None
-        self._coauthors: Optional[list] = None
-        self._withOutMainFile: Optional[str] = None
-        self._numberWasGenerated: Optional[bool] = None
-        self._autoIncremented: Optional[bool] = None
-        self._reservedNumber: Optional[str] = None
-        self._reservedNomenclature: Optional[str] = None
+        self._subjects: Optional[list] = []
+        self._coauthors: Optional[list] = []
+        self._with_out_main_file: Optional[str] = None
+        self._number_was_generated: Optional[bool] = None
+        self._auto_incremented: Optional[bool] = None
+        self._reserved_number: Optional[str] = None
+        self._reserved_nomenclature: Optional[str] = None
 
-    def with_receiptDate(self, receiptDate):
-        self._receiptDate = receiptDate
+    def with_receipt_date(self, receipt_date):
+        self._receipt_date = receipt_date
         return self
 
-    def with_appealDate(self, appealDate):
-        self._appealDate = appealDate
+    def with_appeal_date(self, appeal_date):
+        self._appeal_date = appeal_date
         return self
 
-    def with_registrationDate(self, registrationDate):
-        self._registrationDate = registrationDate
+    def with_registration_date(self, registration_date):
+        self._registration_date = registration_date
         return self
 
-    def with_deadlineDate(self, deadlineDate):
-        self._deadlineDate = deadlineDate
+    def with_deadline_date(self, deadline_date):
+        self._deadline_date = deadline_date
         return self
 
     def with_authors(self, authors):
@@ -195,80 +195,80 @@ class TestFormDataBuilde(BaseBuilder):
         self._pages = pages
         return self
 
-    def with_coveringLetters(self, coveringLetters):
-        self._coveringLetters = coveringLetters
+    def with_covering_letters(self, covering_letters):
+        self._covering_letters = covering_letters
         return self
 
-    def with_appealParticipants(self, appealParticipants):
-        self._appealParticipants = appealParticipants
+    def with_appeal_participants(self, appeal_participants):
+        self._appeal_participants = appeal_participants
         return self
 
     def with_curators(self, curators):
         self._curators = curators
         return self
 
-    def with_resolutionCurators(self, resolutionCurators):
-        self._resolutionCurators = resolutionCurators
+    def with_resolution_curators(self, resolution_curators):
+        self._resolution_curators = resolution_curators
         return self
 
     def with_employees(self, employees):
         self._employees = employees
         return self
 
-    def with_addresseeActingEmployees(self, addresseeActingEmployees):
-        self._addresseeActingEmployees = addresseeActingEmployees
+    def with_addressee_acting_employees(self, addressee_acting_employees):
+        self._addressee_acting_employees = addressee_acting_employees
         return self
 
-    def with_appealObjects(self, appealObjects):
-        self._appealObjects = appealObjects
+    def with_appeal_objects(self, appeal_objects):
+        self._appeal_objects = appeal_objects
         return self
 
-    def with_authorOfLegals(self, authorOfLegals):
-        self._authorOfLegals = authorOfLegals
+    def with_author_of_legals(self, author_of_legals):
+        self._author_of_legals = author_of_legals
         return self
 
-    def with_toNumber(self, toNumber):
-        self._toNumber = toNumber
+    def with_to_number(self, to_number):
+        self._to_number = to_number
         return self
 
-    def with_referringDocuments(self, referringDocuments):
-        self._referringDocuments = referringDocuments
+    def with_referring_documents(self, referring_documents):
+        self._referring_documents = referring_documents
         return self
 
     def with_options(self, options):
         self._options = options
         return self
 
-    def with_numberPages(self, numberPages):
-        self._numberPages = numberPages
+    def with_number_pages(self, number_pages):
+        self._number_pages = number_pages
         return self
 
-    def with_numberSignatures(self, numberSignatures):
-        self._numberSignatures = numberSignatures
+    def with_number_signatures(self, number_signatures):
+        self._number_signatures = number_signatures
         return self
 
-    def with_isAdministrativeUse(self, isAdministrativeUse):
-        self._isAdministrativeUse = isAdministrativeUse
+    def with_is_administrative_use(self, is_administrative_use):
+        self._is_administrative_use = is_administrative_use
         return self
 
-    def with_documentKind(self, documentKind):
-        self._documentKind = documentKind
+    def with_document_kind(self, document_kind):
+        self._document_kind = document_kind
         return self
 
-    def with_medoDocumentKind(self, medoDocumentKind):
-        self._medoDocumentKind = medoDocumentKind
+    def with_medo_document_kind(self, medo_document_kind):
+        self._medo_document_kind = medo_document_kind
         return self
 
-    def with_typeReceipt(self, typeReceipt):
-        self._typeReceipt = typeReceipt
+    def with_type_receipt(self, type_receipt):
+        self._type_receipt = type_receipt
         return self
 
-    def with_typeRepeat(self, typeRepeat):
-        self._typeRepeat = typeRepeat
+    def with_type_repeat(self, type_repeat):
+        self._type_repeat = type_repeat
         return self
 
-    def with_documentType(self, documentType):
-        self._documentType = documentType
+    def with_document_type(self, document_type):
+        self._document_type = document_type
         return self
 
     def with_number(self, number):
@@ -283,63 +283,63 @@ class TestFormDataBuilde(BaseBuilder):
         self._coauthors = coauthors
         return self
 
-    def with_withOutMainFile(self, withOutMainFile):
-        self._withOutMainFile = withOutMainFile
+    def with_with_out_main_file(self, with_out_main_file):
+        self._with_out_main_file = with_out_main_file
         return self
 
-    def with_numberWasGenerated(self, numberWasGenerated):
-        self._numberWasGenerated = numberWasGenerated
+    def with_number_was_generated(self, number_was_generated):
+        self._number_was_generated = number_was_generated
         return self
 
-    def with_autoIncremented(self, autoIncremented):
-        self._autoIncremented = autoIncremented
+    def with_auto_incremented(self, auto_incremented):
+        self._auto_incremented = auto_incremented
         return self
 
-    def with_reservedNumber(self, reservedNumber):
-        self._reservedNumber = reservedNumber
+    def with_reserved_number(self, reserved_number):
+        self._reserved_number = reserved_number
         return self
 
-    def with_reservedNomenclature(self, reservedNomenclature):
-        self._reservedNomenclature = reservedNomenclature
+    def with_reserved_nomenclature(self, reserved_nomenclature):
+        self._reserved_nomenclature = reserved_nomenclature
         return self
 
     def build(self):
         return TestFormData(
-            receiptDate=self._receiptDate,
-            appealDate=self._appealDate,
-            registrationDate=self._registrationDate,
-            deadlineDate=self._deadlineDate,
+            receipt_date=self._receipt_date,
+            appeal_date=self._appeal_date,
+            registration_date=self._registration_date,
+            deadline_date=self._deadline_date,
             authors=self._authors,
             nomenclature=self._nomenclature,
             questions=self._questions,
             answers=self._answers,
             files=self._files,
             pages=self._pages,
-            coveringLetters=self._coveringLetters,
-            appealParticipants=self._appealParticipants,
+            covering_letters=self._covering_letters,
+            appeal_participants=self._appeal_participants,
             curators=self._curators,
-            resolutionCurators=self._resolutionCurators,
+            resolution_curators=self._resolution_curators,
             employees=self._employees,
-            addresseeActingEmployees=self._addresseeActingEmployees,
-            appealObjects=self._appealObjects,
-            authorOfLegals=self._authorOfLegals,
-            toNumber=self._toNumber,
-            referringDocuments=self._referringDocuments,
+            addressee_acting_employees=self._addressee_acting_employees,
+            appeal_objects=self._appeal_objects,
+            author_of_legals=self._author_of_legals,
+            to_number=self._to_number,
+            referring_documents=self._referring_documents,
             options=self._options,
-            numberPages=self._numberPages,
-            numberSignatures=self._numberSignatures,
-            isAdministrativeUse=self._isAdministrativeUse,
-            documentKind=self._documentKind,
-            medoDocumentKind=self._medoDocumentKind,
-            typeReceipt=self._typeReceipt,
-            typeRepeat=self._typeRepeat,
-            documentType=self._documentType,
+            number_pages=self._number_pages,
+            number_signatures=self._number_signatures,
+            is_administrative_use=self._is_administrative_use,
+            document_kind=self._document_kind,
+            medo_document_kind=self._medo_document_kind,
+            type_receipt=self._type_receipt,
+            type_repeat=self._type_repeat,
+            document_type=self._document_type,
             number=self._number,
             subjects=self._subjects,
             coauthors=self._coauthors,
-            withOutMainFile=self._withOutMainFile,
-            numberWasGenerated=self._numberWasGenerated,
-            autoIncremented=self._autoIncremented,
-            reservedNumber=self._reservedNumber,
-            reservedNomenclature=self._reservedNomenclature,
+            with_out_main_file=self._with_out_main_file,
+            number_was_generated=self._number_was_generated,
+            auto_incremented=self._auto_incremented,
+            reserved_number=self._reserved_number,
+            reserved_nomenclature=self._reserved_nomenclature,
         ).asdict()'''

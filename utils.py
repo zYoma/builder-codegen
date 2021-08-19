@@ -1,17 +1,31 @@
 import argparse
 import logging
+import re
 import sys
 import json
 
 
 TYPE_TO_STR = {
-        bool: 'bool',
-        int: 'int',
-        float: 'float',
-        str: 'str',
-        dict: 'dict',
-        list: 'list',
-    }
+    bool: 'bool',
+    int: 'int',
+    float: 'float',
+    str: 'str',
+    dict: 'dict',
+    list: 'list',
+}
+
+
+ROW_TYPE = {
+    list: [],
+    dict: {},
+}
+
+
+def camel_case_to_snake_case(name: str) -> str:
+    pattern = re.compile(r'(?<!^)(?=[A-Z])')
+    snake_name = pattern.sub('_', name).lower()
+
+    return snake_name
 
 
 def get_args():
@@ -57,11 +71,22 @@ def make_code_string(obj_data: dict, args_name: str) -> str:
     """
     dataclass_name, builder_name = get_class_name(args_name)
 
-    def _make_class_rows(with_self=False):
-        self_ = '    self._' if with_self else ''
+    def _make_class_rows(is_builder=False):
+        self_ = '    self._' if is_builder else ''
+
         for field, value in obj_data.items():
-            base_line.append \
-                (f'    {self_}{field}: Optional[{TYPE_TO_STR.get(type(value), "str")}] = None')
+            type_value = type(value)
+            is_factory_types = type_value in [list, dict]
+            string_type = TYPE_TO_STR.get(type_value, "str")
+            default_value = ROW_TYPE[type_value] if is_factory_types else 'None'
+            start_row = f'    {self_}{field}: '
+
+            if is_factory_types and not is_builder:
+                row = f'{start_row}{string_type} = field(default_factory=lambda: {default_value})'
+            else:
+                row = f'{start_row}Optional[{string_type}] = {default_value}'
+
+            base_line.append(row)
 
     # dataclass
     base_line = ['@dataclass', f'class {dataclass_name}(BaseModel):']
@@ -69,7 +94,7 @@ def make_code_string(obj_data: dict, args_name: str) -> str:
 
     # builder
     base_line += [f'\n\nclass {builder_name}(BaseBuilder):', '    def __init__(self):', '        super().__init__()']
-    _make_class_rows(with_self=True)
+    _make_class_rows(is_builder=True)
 
     # методы билдера
     for field_name in obj_data.keys():

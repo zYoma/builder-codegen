@@ -4,6 +4,8 @@ from dataclasses import make_dataclass, asdict
 from distutils.util import strtobool
 from typing import Union
 
+from utils import camel_case_to_snake_case
+
 
 class Builder:
     """
@@ -13,7 +15,8 @@ class Builder:
     def __init__(self, data: Union[str, dict]):
         self.json_data = json.loads(data) if isinstance(data, str) else data
 
-    def _get_field_types(self):
+    @staticmethod
+    def _get_field_types(data: dict):
         """
         Собирает список картежей ('имя_поля', 'тип поля')
         необходимый для создания датакласса.
@@ -29,12 +32,13 @@ class Builder:
 
         return [
             (field_name, cast_func_map.get(type(value)))
-            for field_name, value in self.json_data.items()
+            for field_name, value in data.items()
         ]
 
     def get_json_obj(self):
-        fields = self._get_field_types()
+        data = {camel_case_to_snake_case(k): v for k, v in self.json_data.items()}
+        fields = self._get_field_types(data)
         created_class = make_dataclass('JsonObject', fields)
-        obj = created_class(**self.json_data)
+        obj = created_class(**data)
 
         return asdict(obj)

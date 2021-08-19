@@ -1,4 +1,4 @@
-from utils import make_code_string,  write_file
+from utils import make_code_string,  write_file, camel_case_to_snake_case
 
 from .fixtures import *
 
@@ -17,3 +17,13 @@ def test_get_class_name(json_result):
 
     assert e.type == SystemExit
     assert e.value.code == 1
+
+
+def test_camel_case_to_snake_case():
+    test_case_1 = camel_case_to_snake_case('CamelCase')
+    test_case_2 = camel_case_to_snake_case('case')
+    test_case_3 = camel_case_to_snake_case('camel_case')
+
+    assert test_case_1 == 'camel_case'
+    assert test_case_2 == 'case'
+    assert test_case_3 == 'camel_case'
