@@ -4,6 +4,10 @@ import re
 import sys
 import json
 
+from typing import Union
+
+
+GLOBAL_DICT = {}
 
 TYPE_TO_STR = {
     bool: 'bool',
@@ -33,6 +37,7 @@ def get_args():
     parser.add_argument('-j', '--json', help='JSON файл источник', default='data.json')
     parser.add_argument('-o', '--output', help='Имя выходного файла', default='result.py')
     parser.add_argument('-n', '--name', help='ИмяДатакласса:ИмяБилдера', required=True)
+    parser.add_argument('-l', '--level', help='Максимальный уровень вложенности', default=None , type=int)
     return parser.parse_args()
 
 
@@ -53,13 +58,99 @@ def get_json(filename: str = 'data.json') -> dict:
     return data
 
 
-def write_file(data, filename: str = 'result.py'):
-    with open(filename, "w") as f:
+def write_file(data, filename: str = 'result.py', append=False):
+    write_type = "a" if append else "w"
+    with open(filename, write_type) as f:
         for row in data:
             f.write(row)
 
 
-def make_code_string(obj_data: dict, args_name: str) -> str:
+def make_global_dict(
+        data: Union[dict, list],
+        max_level: Union[int, None],
+        level: int = 0,
+        parent: str = '',
+) -> None:
+    """
+    Рекурсивно обходим словарь. Формируем GLOBAL_DICT, где ключи - это путь(строка) до
+    вложенного объекта через разделитель __, значения - значения вложенного объекта.
+
+    :param data: при первом вызове - исходный словарь, при рекурсивных вызовах -
+                вложенный список или дикт
+    :param max_level: максимальный уровень вложенности
+    :param level: текущий уровень
+    :param parent: строка с путем до родительского объекта
+    """
+    if max_level is not None and level > max_level:
+        return
+
+    next_level = level + 1
+
+    if isinstance(data, list):
+        [
+            make_global_dict(
+                data=obj,
+                level=next_level,
+                parent=f'{parent}__{num}',
+                max_level=max_level,
+            )
+            for num, obj in enumerate(data)
+        ]
+
+    if isinstance(data, dict):
+        for field_name, value in data.items():
+            if isinstance(value, dict):
+                next_parent = f'{parent}__{field_name}'
+                GLOBAL_DICT[next_parent] = value
+
+                make_global_dict(
+                    data=value,
+                    level=next_level,
+                    parent=next_parent,
+                    max_level=max_level
+                )
+            if isinstance(value, list):
+                next_parent = f'{field_name}'
+
+                make_global_dict(
+                    data=value,
+                    level=next_level,
+                    parent=next_parent,
+                    max_level=max_level
+                )
+
+
+def make_code_nested_dataclass(obj_data: dict, max_level: int) -> str:
+    """
+    Функция для генерации кода всех вложенных датаклассов.
+    :param obj_data: исходный словарь
+    :param max_level: саксимальный уровень вложенности
+    :return: сгенерированный код
+    """
+    make_global_dict(obj_data, max_level)
+    code = ''
+
+    # Сортируем по уровню вложенности для того, чтобы в генерируемом файле сперва
+    # шли датаклассы с максимальной вложенностью
+    sorted_dict = dict(sorted(
+        GLOBAL_DICT.items(),
+        key=lambda x: len(x[0].split('__')),
+        reverse=True)
+    )
+
+    for path in sorted_dict:
+        if obj_data := sorted_dict[path]:
+            code += make_code_string(
+                obj_data=obj_data,
+                args_name=f'{path}:{path}Builder',
+                nested=True,
+            )
+            code += '\n\n'
+
+    return code
+
+
+def make_code_string(obj_data: dict, args_name: str, nested: bool = False) -> str:
     """
     Метод рисует выходной файл.
     Собираем список, где каждый элемент - отдельная строка.
@@ -80,11 +171,16 @@ def make_code_string(obj_data: dict, args_name: str) -> str:
             string_type = TYPE_TO_STR.get(type_value, "str")
             default_value = ROW_TYPE[type_value] if is_factory_types else 'None'
             start_row = f'    {self_}{field}: '
+            class_name = f'{dataclass_name}__{field}' if nested else f'__{field}'
+            dataclass_field_value = f'Optional[{class_name}] = None' if GLOBAL_DICT.get(
+                f'{class_name}') else f'{string_type}' + ' = field(default_factory=lambda: {})'
 
-            if is_factory_types and not is_builder:
-                row = f'{start_row}{string_type} = field(default_factory=lambda: {default_value})'
+            if isinstance(value, dict):
+                row = f'{start_row}{dataclass_field_value}'
             else:
-                row = f'{start_row}Optional[{string_type}] = {default_value}'
+                row = f'{start_row}{string_type} = field(default_factory=lambda: {default_value})' \
+                    if isinstance(value, list) and not is_builder else \
+                    f'{start_row}Optional[{string_type}] = {default_value}'
 
             base_line.append(row)
 

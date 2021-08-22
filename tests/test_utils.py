@@ -1,4 +1,6 @@
-from utils import make_code_string,  write_file, camel_case_to_snake_case
+from utils import (
+    make_code_string,  write_file, camel_case_to_snake_case, make_code_nested_dataclass
+)
 
 from .fixtures import *
 
@@ -6,7 +8,7 @@ from .fixtures import *
 def test_make_code_string(json_result, make_code_string_result):
     args_name = "TestFormData:TestFormDataBuilde"
     test_result = make_code_string(json_result, args_name)
-
+    print(test_result)
     assert test_result == make_code_string_result
 
 
@@ -27,3 +29,21 @@ def test_camel_case_to_snake_case():
     assert test_case_1 == 'camel_case'
     assert test_case_2 == 'case'
     assert test_case_3 == 'camel_case'
+
+
+def test_make_code_nested_dataclass(make_code_nested_dataclass_data, make_code_nested_dataclass_result):
+    test_result = make_code_nested_dataclass(make_code_nested_dataclass_data, None)
+
+    assert len(test_result) == make_code_nested_dataclass_result
+
+
+def test_make_code_nested_dataclass_with_level(make_code_nested_dataclass_data):
+    test_result = make_code_nested_dataclass(make_code_nested_dataclass_data, 1)
+
+    assert len(test_result) == 10897
+
+
+def test_make_code_nested_dataclass(make_code_nested_dataclass_data, make_code_nested_dataclass_result):
+    test_result = make_code_nested_dataclass(make_code_nested_dataclass_data, None)
+
+    assert len(test_result) == make_code_nested_dataclass_result
