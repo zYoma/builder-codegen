@@ -32,6 +32,11 @@ def camel_case_to_snake_case(name: str) -> str:
     return snake_name
 
 
+def to_camel_case(snake_str: str) -> str:
+    components = snake_str.split('_')
+    return ''.join(x.title() for x in components)
+
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-j', '--json', help='JSON файл источник', default='data.json')
@@ -142,7 +147,7 @@ def make_code_nested_dataclass(obj_data: dict, max_level: int) -> str:
         if obj_data := sorted_dict[path]:
             code += make_code_string(
                 obj_data=obj_data,
-                args_name=f'{path}:{path}Builder',
+                args_name=f'{path}:{path}_builder',
                 nested=True,
             )
             code += '\n\n'
@@ -158,9 +163,15 @@ def make_code_string(obj_data: dict, args_name: str, nested: bool = False) -> st
 
     :param obj_data: словарь с данными объекта
     :param args_name: строка с именами классов
+    :param nested: для вложенных датаклассов или для основного
     :return: собранная строка
     """
     dataclass_name, builder_name = get_class_name(args_name)
+    camel_case_dataclass_name = to_camel_case(dataclass_name)
+    camel_case_builder_name = to_camel_case(builder_name)
+    if not nested:
+        camel_case_builder_name = builder_name
+        camel_case_dataclass_name = dataclass_name
 
     def _make_class_rows(is_builder=False):
         self_ = '    self._' if is_builder else ''
@@ -171,9 +182,12 @@ def make_code_string(obj_data: dict, args_name: str, nested: bool = False) -> st
             string_type = TYPE_TO_STR.get(type_value, "str")
             default_value = ROW_TYPE[type_value] if is_factory_types else 'None'
             start_row = f'    {self_}{field}: '
-            class_name = f'{dataclass_name}__{field}' if nested else f'__{field}'
+            camel_case_field = to_camel_case(field)
+
+            original_class_name = f'{dataclass_name}__{field}' if nested else f'__{field}'
+            class_name = f'{camel_case_dataclass_name}{camel_case_field}' if nested else f'{camel_case_field}'
             dataclass_field_value = f'Optional[{class_name}] = None' if GLOBAL_DICT.get(
-                f'{class_name}') else f'{string_type}' + ' = field(default_factory=lambda: {})'
+                f'{original_class_name}') else f'{string_type}' + ' = field(default_factory=lambda: {})'
 
             if isinstance(value, dict):
                 row = f'{start_row}{dataclass_field_value}'
@@ -185,11 +199,11 @@ def make_code_string(obj_data: dict, args_name: str, nested: bool = False) -> st
             base_line.append(row)
 
     # dataclass
-    base_line = ['@dataclass', f'class {dataclass_name}(BaseModel):']
+    base_line = ['@dataclass', f'class {camel_case_dataclass_name}(BaseModel):']
     _make_class_rows()
 
     # builder
-    base_line += [f'\n\nclass {builder_name}(BaseBuilder):', '    def __init__(self):', '        super().__init__()']
+    base_line += [f'\n\nclass {camel_case_builder_name}(BaseBuilder):', '    def __init__(self):', '        super().__init__()']
     _make_class_rows(is_builder=True)
 
     # методы билдера
@@ -200,7 +214,7 @@ def make_code_string(obj_data: dict, args_name: str, nested: bool = False) -> st
 
     # метод build
     base_line.append('\n    def build(self):')
-    base_line.append(f'        return {dataclass_name}(')
+    base_line.append(f'        return {camel_case_dataclass_name}(')
 
     for field_name in obj_data.keys():
         base_line.append(f'            {field_name}=self._{field_name},')

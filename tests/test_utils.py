@@ -8,7 +8,7 @@ from .fixtures import *
 def test_make_code_string(json_result, make_code_string_result):
     args_name = "TestFormData:TestFormDataBuilde"
     test_result = make_code_string(json_result, args_name)
-    print(test_result)
+
     assert test_result == make_code_string_result
 
 
@@ -40,7 +40,7 @@ def test_make_code_nested_dataclass(make_code_nested_dataclass_data, make_code_n
 def test_make_code_nested_dataclass_with_level(make_code_nested_dataclass_data):
     test_result = make_code_nested_dataclass(make_code_nested_dataclass_data, 1)
 
-    assert len(test_result) == 10897
+    assert len(test_result) == 10844
 
 
 def test_make_code_nested_dataclass(make_code_nested_dataclass_data, make_code_nested_dataclass_result):

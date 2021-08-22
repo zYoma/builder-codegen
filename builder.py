@@ -109,4 +109,3 @@ class Builder:
     def get_dict_obj(self):
         """ Метод возвращет словарь. """
         return self._rename_fields(self.json_data)
-
