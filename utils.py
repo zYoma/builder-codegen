@@ -57,7 +57,7 @@ def get_class_name(args_name: str):
 
 
 def get_json(filename: str = 'data.json') -> dict:
-    with open(filename, "r") as f:
+    with open(filename, "r", encoding="utf8") as f:
         data = json.load(f)
 
     return data
