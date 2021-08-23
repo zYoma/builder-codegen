@@ -122,7 +122,7 @@ class TestFormDataBuilde(BaseBuilder):
         self._registration_date: Optional[str] = None
         self._deadline_date: Optional[str] = None
         self._authors: Optional[list] = []
-        self._nomenclature: dict = field(default_factory=lambda: {})
+        self._nomenclature: Optional[dict] = {}
         self._questions: Optional[list] = []
         self._answers: Optional[list] = []
         self._files: Optional[list] = []
@@ -137,15 +137,15 @@ class TestFormDataBuilde(BaseBuilder):
         self._author_of_legals: Optional[list] = []
         self._to_number: Optional[list] = []
         self._referring_documents: Optional[list] = []
-        self._options: dict = field(default_factory=lambda: {})
+        self._options: Optional[dict] = {}
         self._number_pages: Optional[str] = None
         self._number_signatures: Optional[int] = None
         self._is_administrative_use: Optional[bool] = None
         self._document_kind: Optional[str] = None
         self._medo_document_kind: Optional[str] = None
-        self._type_receipt: dict = field(default_factory=lambda: {})
-        self._type_repeat: dict = field(default_factory=lambda: {})
-        self._document_type: dict = field(default_factory=lambda: {})
+        self._type_receipt: Optional[dict] = {}
+        self._type_repeat: Optional[dict] = {}
+        self._document_type: Optional[dict] = {}
         self._number: Optional[str] = None
         self._subjects: Optional[list] = []
         self._coauthors: Optional[list] = []
@@ -835,7 +835,7 @@ def get_nested_dataclass_dict_result():
 
 @pytest.fixture
 def make_code_nested_dataclass_result():
-    return 60257
+    return 60236
 
 
 @pytest.fixture

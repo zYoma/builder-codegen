@@ -183,18 +183,18 @@ def make_code_string(obj_data: dict, args_name: str, nested: bool = False) -> st
             default_value = ROW_TYPE[type_value] if is_factory_types else 'None'
             start_row = f'    {self_}{field}: '
             camel_case_field = to_camel_case(field)
+            dataclass_field_default_value = f'Optional[{string_type}] = {default_value}' \
+                if is_builder else f'{string_type} = field(default_factory=lambda: {default_value})'
 
             original_class_name = f'{dataclass_name}__{field}' if nested else f'__{field}'
             class_name = f'{camel_case_dataclass_name}{camel_case_field}' if nested else f'{camel_case_field}'
             dataclass_field_value = f'Optional[{class_name}] = None' if GLOBAL_DICT.get(
-                f'{original_class_name}') else f'{string_type}' + ' = field(default_factory=lambda: {})'
+                f'{original_class_name}') else dataclass_field_default_value
 
-            if isinstance(value, dict):
+            if is_factory_types:
                 row = f'{start_row}{dataclass_field_value}'
             else:
-                row = f'{start_row}{string_type} = field(default_factory=lambda: {default_value})' \
-                    if isinstance(value, list) and not is_builder else \
-                    f'{start_row}Optional[{string_type}] = {default_value}'
+                row = f'{start_row}Optional[{string_type}] = {default_value}'
 
             base_line.append(row)
 

@@ -40,7 +40,7 @@ def test_make_code_nested_dataclass(make_code_nested_dataclass_data, make_code_n
 def test_make_code_nested_dataclass_with_level(make_code_nested_dataclass_data):
     test_result = make_code_nested_dataclass(make_code_nested_dataclass_data, 1)
 
-    assert len(test_result) == 10844
+    assert len(test_result) == 10802
 
 
 def test_make_code_nested_dataclass(make_code_nested_dataclass_data, make_code_nested_dataclass_result):
